@@ -1,0 +1,14 @@
+require:
+  - rubocop-rake
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.2
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/SpecFilePathFormat:
+  CustomTransform:
+    CubeSmart: cubesmart
