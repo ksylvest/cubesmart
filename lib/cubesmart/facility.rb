@@ -22,6 +22,10 @@ module CubeSmart
     #   @return [String]
     attr_accessor :id
 
+    # @attribute [rw] url
+    #   @return [String]
+    attr_accessor :url
+
     # @attribute [rw] name
     #   @return [String]
     attr_accessor :name
@@ -56,22 +60,23 @@ module CubeSmart
     # @return [Facility]
     def self.fetch(url:)
       document = Crawler.html(url:)
-      parse(document:)
+      parse(url:, document:)
     end
 
+    # @param url [String]
     # @param document [Nokogiri::HTML::Document]
     #
     # @return [Facility]
-    def self.parse(document:)
+    def self.parse(url:, document:)
       data = parse_json_ld(document:)
 
-      id = data['url'].match(ID_REGEX)[:id]
+      id = ID_REGEX.match(url)[:id]
       name = data['name']
       address = Address.parse(data: data['address'])
       geocode = Geocode.parse(data: data['geo'])
       prices = document.css(PRICE_SELECTOR).map { |element| Price.parse(element: element) }
 
-      new(id:, name:, address:, geocode:, prices:)
+      new(id:, url:, name:, address:, geocode:, prices:)
     end
 
     # @param document [Nokogiri::HTML::Document]
@@ -85,14 +90,16 @@ module CubeSmart
     end
 
     # @param id [String]
+    # @param url [String]
     # @param name [String]
     # @param address [Address]
     # @param geocode [Geocode]
     # @param phone [String]
     # @param email [String]
     # @param prices [Array<Price>]
-    def initialize(id:, name:, address:, geocode:, phone: DEFAULT_PHONE, email: DEFAULT_EMAIL, prices: [])
+    def initialize(id:, url:, name:, address:, geocode:, phone: DEFAULT_PHONE, email: DEFAULT_EMAIL, prices: [])
       @id = id
+      @url = url
       @name = name
       @address = address
       @geocode = geocode
@@ -105,6 +112,7 @@ module CubeSmart
     def inspect
       props = [
         "id=#{@id.inspect}",
+        "url=#{@url.inspect}",
         "address=#{@address.inspect}",
         "geocode=#{@geocode.inspect}",
         "phone=#{@phone.inspect}",
