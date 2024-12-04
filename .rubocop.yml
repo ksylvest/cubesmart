@@ -6,6 +6,9 @@ AllCops:
   NewCops: enable
   TargetRubyVersion: 3.2
 
+Metrics/ParameterLists:
+  Enabled: false
+
 RSpec/MultipleExpectations:
   Enabled: false
 

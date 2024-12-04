@@ -7,6 +7,9 @@ module CubeSmart
   class Facility
     class ParseError < StandardError; end
 
+    DEFAULT_EMAIL = 'webleads@cubesmart.com'
+    DEFAULT_PHONE = '1-877-279-7585'
+
     SITEMAP_URL = 'https://www.cubesmart.com/sitemap-facility.xml'
 
     PRICE_SELECTOR = %w[small medium large].map do |group|
@@ -22,6 +25,14 @@ module CubeSmart
     # @attribute [rw] name
     #   @return [String]
     attr_accessor :name
+
+    # @attribute [rw] phone
+    #   @return [String]
+    attr_accessor :phone
+
+    # @attribute [rw] email
+    #   @return [String]
+    attr_accessor :email
 
     # @attribute [rw] address
     #   @return [Address]
@@ -77,12 +88,16 @@ module CubeSmart
     # @param name [String]
     # @param address [Address]
     # @param geocode [Geocode]
+    # @param phone [String]
+    # @param email [String]
     # @param prices [Array<Price>]
-    def initialize(id:, name:, address:, geocode:, prices:)
+    def initialize(id:, name:, address:, geocode:, phone: DEFAULT_PHONE, email: DEFAULT_EMAIL, prices: [])
       @id = id
       @name = name
       @address = address
       @geocode = geocode
+      @phone = phone
+      @email = email
       @prices = prices
     end
 
@@ -92,6 +107,8 @@ module CubeSmart
         "id=#{@id.inspect}",
         "address=#{@address.inspect}",
         "geocode=#{@geocode.inspect}",
+        "phone=#{@phone.inspect}",
+        "email=#{@email.inspect}",
         "prices=#{@prices.inspect}"
       ]
       "#<#{self.class.name} #{props.join(' ')}>"
@@ -99,7 +116,7 @@ module CubeSmart
 
     # @return [String]
     def text
-      "#{@id} | #{@name} | #{@address.text} | #{@geocode.text}"
+      "#{@id} | #{@name} | #{@phone} | #{@email} | #{@address.text} | #{@geocode.text}"
     end
   end
 end
