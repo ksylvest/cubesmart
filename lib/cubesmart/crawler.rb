@@ -27,6 +27,8 @@ module CubeSmart
         connection = HTTP.persistent(HOST)
         connection = connection.headers('User-Agent' => config.user_agent) if config.user_agent
         connection = connection.timeout(config.timeout) if config.timeout
+        connection = connection.via(*config.proxy_options) if config.proxy?
+
         connection
       end
     end

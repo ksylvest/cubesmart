@@ -20,6 +20,7 @@ require 'cubesmart'
 CubeSmart.configure do |config|
   config.user_agent = '../..' # ENV['CUBESMART_USER_AGENT']
   config.timeout = 30 # ENV['CUBESMART_TIMEOUT']
+  config.proxy_url = 'http://user:pass@superproxy.zenrows.com:1337' # ENV['CUBESMART_PROXY_URL']
 end
 ```
 
