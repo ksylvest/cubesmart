@@ -3,6 +3,8 @@
 module CubeSmart
   # The dimensions (width + depth + sqft) of a price.
   class Dimensions
+    DEFAULT_HEIGHT = 8 # feet
+
     # @attribute [rw] depth
     #   @return [Integer]
     attr_accessor :depth
@@ -11,17 +13,17 @@ module CubeSmart
     #  @return [Integer]
     attr_accessor :width
 
-    # @attribute [rw] sqft
+    # @attribute [rw] height
     #   @return [Integer]
-    attr_accessor :sqft
+    attr_accessor :height
 
     # @param depth [Integer]
     # @param width [Integer]
-    # @param sqft [Integer]
-    def initialize(depth:, width:, sqft:)
+    # @param height [Integer]
+    def initialize(depth:, width:, height: DEFAULT_HEIGHT)
       @depth = depth
       @width = width
-      @sqft = sqft
+      @height = height
     end
 
     # @return [String]
@@ -29,9 +31,19 @@ module CubeSmart
       props = [
         "depth=#{@depth.inspect}",
         "width=#{@width.inspect}",
-        "sqft=#{@sqft.inspect}"
+        "height=#{@height.inspect}"
       ]
       "#<#{self.class.name} #{props.join(' ')}>"
+    end
+
+    # @return [Integer]
+    def sqft
+      Integer(@width * @depth)
+    end
+
+    # @return [Integer]
+    def cuft
+      Integer(@width * @depth * @height)
     end
 
     # @return [String] e.g. "10' × 10' (100 sqft)"
@@ -49,8 +61,7 @@ module CubeSmart
 
       width = Float(match[:width])
       depth = Float(match[:depth])
-      sqft = Integer(width * depth)
-      new(depth:, width:, sqft:)
+      new(depth:, width:, height: DEFAULT_HEIGHT)
     end
   end
 end
