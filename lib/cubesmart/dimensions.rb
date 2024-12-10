@@ -3,23 +3,23 @@
 module CubeSmart
   # The dimensions (width + depth + sqft) of a price.
   class Dimensions
-    DEFAULT_HEIGHT = 8 # feet
+    DEFAULT_HEIGHT = 8.0 # feet
 
     # @attribute [rw] depth
-    #   @return [Integer]
+    #   @return [Float]
     attr_accessor :depth
 
     # @attribute [rw] width
-    #  @return [Integer]
+    #  @return [Float]
     attr_accessor :width
 
     # @attribute [rw] height
-    #   @return [Integer]
+    #   @return [Float]
     attr_accessor :height
 
-    # @param depth [Integer]
-    # @param width [Integer]
-    # @param height [Integer]
+    # @param depth [Float]
+    # @param width [Float]
+    # @param height [Float]
     def initialize(depth:, width:, height: DEFAULT_HEIGHT)
       @depth = depth
       @width = width
@@ -48,7 +48,7 @@ module CubeSmart
 
     # @return [String] e.g. "10' × 10' (100 sqft)"
     def text
-      "#{format('%g', @width)}' × #{format('%g', @depth)}' (#{@sqft} sqft)"
+      "#{format('%g', @width)}' × #{format('%g', @depth)}' (#{sqft} sqft)"
     end
 
     # @param element [Nokogiri::XML::Element]
