@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cubesmart (0.6.0)
+    cubesmart (0.7.0)
       http
       json
       nokogiri

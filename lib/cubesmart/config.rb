@@ -3,6 +3,10 @@
 module CubeSmart
   # The core configuration.
   class Config
+    # @attribute [rw] accept_language
+    #   @return [String]
+    attr_accessor :accept_language
+
     # @attribute [rw] user_agent
     #   @return [String]
     attr_accessor :user_agent
@@ -16,9 +20,20 @@ module CubeSmart
     attr_accessor :proxy_url
 
     def initialize
+      @accept_language = ENV.fetch('CUBESMART_ACCEPT_LANGUAGE', 'en-US,en;q=0.9')
       @user_agent = ENV.fetch('CUBESMART_USER_AGENT', "cubesmart.rb/#{VERSION}")
       @timeout = Integer(ENV.fetch('CUBESMART_TIMEOUT', 60))
       @proxy_url = ENV.fetch('CUBESMART_PROXY_URL', nil)
+    end
+
+    # @return [Boolean]
+    def headers?
+      !@user_agent.nil?
+    end
+
+    # @return [Boolean]
+    def timeout?
+      !@timeout.zero?
     end
 
     # @return [Boolean]
@@ -26,38 +41,18 @@ module CubeSmart
       !@proxy_url.nil?
     end
 
-    # @return [URI]
-    def proxy_uri
-      @proxy_uri ||= URI.parse(proxy_url) if proxy?
+    # @return [Hash<String, String>] e.g { 'User-Agent' => 'cubesmart.rb/1.0.0' }
+    def headers
+      {
+        'Accept-Language' => @accept_language,
+        'User-Agent' => @user_agent
+      }
     end
 
-    # @return [Integer]
-    def proxy_port
-      proxy_uri&.port
-    end
-
-    def proxy_host
-      proxy_uri&.host
-    end
-
-    # @return [String]
-    def proxy_scheme
-      proxy_uri&.scheme
-    end
-
-    # @return [String]
-    def proxy_username
-      proxy_uri&.user
-    end
-
-    # @return [String]
-    def proxy_password
-      proxy_uri&.password
-    end
-
-    # @return [Array]
-    def proxy_options
-      [proxy_host, proxy_port, proxy_username, proxy_password]
+    # @return [Array] e.g. ['proxy.example.com', 8080, 'user', 'pass']
+    def via
+      proxy_uri = URI.parse(@proxy_url)
+      [proxy_uri.host, proxy_uri.port, proxy_uri.user, proxy_uri.password]
     end
   end
 end
