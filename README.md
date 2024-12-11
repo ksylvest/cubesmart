@@ -9,7 +9,7 @@
 ## Installation
 
 ```bash
-gem install extrapsace
+gem install cubesmart
 ```
 
 ## Configuration
