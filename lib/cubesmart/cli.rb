@@ -21,7 +21,7 @@ module CubeSmart
       command = argv.shift
 
       case command
-      when 'crawl' then crawl
+      when 'crawl' then crawl(*argv)
       else
         warn("unsupported command=#{command.inspect}")
         exit(Code::ERROR)
@@ -30,8 +30,9 @@ module CubeSmart
 
     private
 
-    def crawl
-      Crawl.run
+    # @param url [String] optional
+    def crawl(url = nil)
+      Crawl.run(url: url)
       exit(Code::OK)
     end
 
@@ -48,10 +49,15 @@ module CubeSmart
     # @return [OptionParser]
     def parser
       OptionParser.new do |options|
-        options.banner = 'usage: cubesmart [options] <command> [<args>]'
+        options.banner = 'usage: extraspace [options] <command> [<args>]'
 
         options.on('-h', '--help', 'help') { help(options) }
         options.on('-v', '--version', 'version') { version }
+
+        options.separator <<~COMMANDS
+          commands:
+            crawl [url]
+        COMMANDS
       end
     end
   end
