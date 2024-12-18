@@ -6,6 +6,8 @@
 [![Yard](https://img.shields.io/badge/docs-site-blue.svg)](https://cubesmart.ksylvest.com)
 [![CircleCI](https://img.shields.io/circleci/build/github/ksylvest/cubesmart)](https://circleci.com/gh/ksylvest/cubesmart)
 
+A Ruby library offering both a CLI and API for scraping [CubeSmart](hhttps://www.cubesmart.com/) self-storage facilities and prices.
+
 ## Installation
 
 ```bash
@@ -48,4 +50,8 @@ end
 
 ```bash
 cubesmart crawl
+```
+
+```bash
+cubesmart crawl "https://www.cubesmart.com/california-self-storage/los-angeles-self-storage/3844.html"
 ```
