@@ -85,8 +85,17 @@ module CubeSmart
     #
     # @return [Hash]
     def self.parse_json_ld(document:)
-      graph = JSON.parse(document.at_xpath('//script[contains(text(), "@graph")]').text)['@graph']
-      graph.find { |entry| entry['@type'] == 'SelfStorage' } || raise(ParseError, 'missing @graph')
+      scripts = document.xpath('//script[contains(text(), "@graph")]')
+
+      scripts.each do |script|
+        graph = JSON.parse(script)['@graph']
+        entry = graph.find { |entry| entry['@type'] == 'SelfStorage' }
+        return entry if entry
+      rescue JSON::ParseError
+        next
+      end
+
+      raise(ParseError, 'missing @graph for @type of "SelfStorage"')
     end
 
     # @param id [String]
